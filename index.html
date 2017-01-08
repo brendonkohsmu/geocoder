@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<!-- Author: Brendon Koh, Email: brendon.koh.2014@sis.smu.edu.sg-->
+<html>
+<head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+var postcodes=["560723",
+"659164",
+"688846",
+"538829",
+"609788",
+"319260",
+"738579",
+"768826",
+"460212",
+"150163",
+"120451",
+"389707",
+"440080",
+"168937",
+"519457",
+"148958",
+"545025",
+"529203"];
+//var url='http://www.onemap.sg/API/services.svc/basicSearch?token=qo/s2TnSUmfLz+32CvLC4RMVkzEFYjxqyti1KhByvEacEdMWBpCuSSQ+IFRT84QjGPBCuz/cBom8PfSm3GjEsGc8PkdEEOEr&searchVal=560723&otptFlds=SEARCHVAL,CATEGORY&returnGeom=1&rset=1';
+$(document).ready(function(){
+	for(var i=0; i<postcodes.length;i++){
+	var url='http://www.onemap.sg/API/services.svc/basicSearch?token=qo/s2TnSUmfLz+32CvLC4RMVkzEFYjxqyti1KhByvEacEdMWBpCuSSQ+IFRT84QjGPBCuz/cBom8PfSm3GjEsGc8PkdEEOEr&searchVal='+postcodes[i]+'&otptFlds=SEARCHVAL,CATEGORY&returnGeom=1&rset=1';
+    $.getJSON(url, function(data, status){
+            //alert("Data: " + data + "\nStatus: " + status);			
+			//alert(data);					
+			$('#table').append('<tr><td>'+data['SearchResults'][1]['SEARCHVAL']+'</td><td>'
+			+data['SearchResults'][1]['X']+'</td><td>'
+			+data['SearchResults'][1]['Y']+'</td></tr>'			
+			);			
+    });
+	}
+	
+	$("#btnSubmit").click(function(){
+        var singleUrl='http://www.onemap.sg/API/services.svc/basicSearch?token=qo/s2TnSUmfLz+32CvLC4RMVkzEFYjxqyti1KhByvEacEdMWBpCuSSQ+IFRT84QjGPBCuz/cBom8PfSm3GjEsGc8PkdEEOEr&searchVal='+$('#postcode').val()+'&otptFlds=SEARCHVAL,CATEGORY&returnGeom=1&rset=1';
+		$.getJSON(singleUrl, function(data, status){
+            //alert("Data: " + data + "\nStatus: " + status);			
+			//alert(data);					
+			$('#xcoord').val(data['SearchResults'][1]['X']);
+			$('#ycoord').val(data['SearchResults'][1]['Y']);
+		});
+    }); 	
+});
+</script>
+</head>
+<body>
+<h2>Using OneMap API.</h2>
+Created by Brendon Koh (<b>brendon.koh.2014@sis.smu.edu.sg</b>)
+<table id="table" border="1" class="table-striped">
+    <tr>
+        <th>POSTCODE</th>        
+		<th>X-COORDINATES</th> 
+		<th>Y-COORDINATES</th> 
+    </tr>
+</table>
+<br>
+<h2>Single PostCode Query</h2><br>
+<table>
+	<tr>
+		<th>POSTCODE</th>
+		<th>X-COORDINATES</th>
+		<th>Y-COORDINATES</th>
+		<th></th>
+	</tr>
+	<tr>
+		<td><input type="text" id="postcode"></td>
+		<td><input STYLE="background-color: #ffff00"type="text" id="xcoord" readonly></td>
+		<td><input STYLE="background-color: #ffff00"type="text" id="ycoord" readonly></td>
+		<td><button id="btnSubmit" type="button">Click Me!</button></td>
+	</tr>
+	
+</table>
+</body>
+</html>
